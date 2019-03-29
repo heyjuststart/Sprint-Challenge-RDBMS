@@ -6,9 +6,13 @@ const getById = id =>
   db('projects')
     .where({ 'projects.id': id })
     .first().then(project => {
-      return db('actions')
-        .where({ 'actions.project_id': id })
-        .then(actions => ( { ...project, actions } ));
+      if (project) {
+        return db('actions')
+          .where({ 'actions.project_id': id })
+          .then(actions => ( { ...project, actions } ));
+      } else {
+        return null;
+      }
     });
 
 const insert = project =>
@@ -19,7 +23,8 @@ const insert = project =>
 const update = (id, changes) =>
   db('projects')
     .where({ id })
-    .update(changes);
+    .update(changes)
+    .then(() => getById(id));
 
 const remove = id =>
   db('projects')
