@@ -80,4 +80,23 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  try {
+    const maybeAction = await Actions.getById(req.params.id);
+    if (maybeAction) {
+      await Actions.remove(req.params.id);
+      return res.status(200).json(maybeAction);
+    } else {
+      return res
+        .status(404)
+        .json({ message: 'The action with the specified ID does not exist.' });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: 'There was an error while deleting the action'
+    });
+  }
+});
+
 module.exports = router;
