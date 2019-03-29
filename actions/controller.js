@@ -38,9 +38,9 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    if (!req.body.name || ~req.body.description) {
+    if (!req.body.name || !req.body.description || !req.body.notes) {
       return res.status(400).json({
-        errorMessage: 'Please provide a name and a description'
+        errorMessage: 'Please provide a name, description, and notes'
       });
     }
     const action = await Actions.insert(req.body);
