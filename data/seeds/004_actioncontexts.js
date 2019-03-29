@@ -1,6 +1,6 @@
-exports.seed = function(knex) {
+exports.seed = function(knex, Promise) {
   // get all actions and contexts
-  Promise.all([knex('contexts'), knex('actions')]).then(
+  return Promise.all([knex('contexts'), knex('actions')]).then(
     ([contexts, actions]) => {
       // select at random from those 2 arrays to create
       // actioncontexts
@@ -8,10 +8,10 @@ exports.seed = function(knex) {
       for (let i = 0; i < 30; i++) {
         entries.push({
           context_id: contexts[Math.floor(Math.random() * contexts.length)].id,
-          action_id: actions[Math.floor(Math.random() * actions.length)]
+          action_id: actions[Math.floor(Math.random() * actions.length)].id
         });
-        return knex('actioncontexts').insert(entries);
       }
+      return knex('actioncontexts').insert(entries);
     }
   );
 };

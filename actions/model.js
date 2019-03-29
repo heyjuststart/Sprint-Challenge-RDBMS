@@ -5,7 +5,17 @@ const get = () => db('actions');
 const getById = id =>
   db('actions')
     .where({ 'actions.id': id })
-    .first();
+    .first()
+    .then(action => {
+      if (action) {
+        return db('actioncontexts')
+          .join('contexts', 'contexts.id', '=', 'actioncontexts.action_id')
+          .where({ 'actioncontexts.action_id': id })
+          .then(contexts => ({ ...action, contexts }));
+      } else {
+        return null;
+      }
+    });
 
 const insert = action =>
   db('actions')
@@ -23,11 +33,10 @@ const remove = id =>
     .where({ id })
     .del();
 
-
 module.exports = {
   get,
   getById,
   insert,
   update,
-  remove,
+  remove
 };
