@@ -5,11 +5,7 @@ const get = () => db('actions');
 const getById = id =>
   db('actions')
     .where({ 'actions.id': id })
-    .first().then(action => {
-      return db('actions')
-        .where({ 'actions.action_id': id })
-        .then(actions => ( { ...action, actions } ));
-    });
+    .first();
 
 const insert = action =>
   db('actions')
@@ -19,7 +15,8 @@ const insert = action =>
 const update = (id, changes) =>
   db('actions')
     .where({ id })
-    .update(changes);
+    .update(changes)
+    .then(() => getById(id));
 
 const remove = id =>
   db('actions')
